@@ -13,20 +13,8 @@ using namespace ftgl;
 
 #include <glm/glm.hpp>
 
-#ifdef ANDROMEDA_SWITCH
 	#include <ft2build.h>
 	#include FT_FREETYPE_H
-#endif
-
-#ifdef ANDROMEDA_GL3
-	#include <ft2build.h>
-	#include FT_FREETYPE_H
-#endif
-
-#ifdef ANDROMEDA_VITA
-	#include <ft2build.h>
-	#include FT_FREETYPE_H
-#endif
 
 namespace Andromeda
 {
@@ -35,7 +23,6 @@ namespace Andromeda
 		class TexturedFont
 		{
 		private:
-
 
 			//ftgl font
 			texture_font_t* _font;
@@ -104,7 +91,6 @@ namespace Andromeda
 
             static bool CreateDistanceFieldFont(float size, float bigSize, int atlasSize, std::string cache, std::string filename);
             static texture_glyph_t* CreateDistanceGlymph(FT_Library& library, TextureAtlas* atlas, const char* filename, const char* codepoint, const float   highres_size, const float   lowres_size, const float   padding);
-
 
 			int CacheGlyphs(std::string cache);
 

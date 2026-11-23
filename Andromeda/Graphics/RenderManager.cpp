@@ -1,17 +1,7 @@
 #include <Andromeda/Graphics/RenderManager.h>
 #include <Andromeda/Graphics/VertexTypes.h>
 
-#ifdef ANDROMEDA_GL3
 #include <Andromeda/Graphics/GL/RenderManagerGL3.h>
-#endif
-
-#ifdef ANDROMEDA_SWITCH
-#include <Andromeda/Graphics/GL/RenderManagerGL3.h>
-#endif
-
-#ifdef ANDROMEDA_VITA
-#include <Andromeda/Graphics/GXM/RenderManagerGxm.h>
-#endif
 
 namespace Andromeda
 {
@@ -23,23 +13,11 @@ namespace Andromeda
 		{
 			if(_renderManager == 0)
 			{
-				#ifdef ANDROMEDA_GL3
-				{
-					_renderManager = new RenderManagerGL3();
-				}								
-				#endif
 				
-				#ifdef ANDROMEDA_SWITCH
 				{
 					_renderManager = new RenderManagerGL3();
 				}								
-				#endif
 
-				#ifdef ANDROMEDA_VITA
-				{
-					_renderManager = new RenderManagerGxm();
-				}								
-				#endif
 			}
 
 			return _renderManager;

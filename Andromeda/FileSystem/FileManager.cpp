@@ -1,20 +1,8 @@
 #include <Andromeda/FileSystem/FileManager.h>
 #include <Andromeda/Utils/Logger.h>
 
-#ifdef ANDROMEDA_PC
 #include <Andromeda/FileSystem/Stdio/StdioFile.h>
 #include <Andromeda/FileSystem/Stdio/StdioDirectory.h>
-#endif
-
-#ifdef ANDROMEDA_SWITCH
-#include <Andromeda/FileSystem/Stdio/StdioFile.h>
-#include <Andromeda/FileSystem/Stdio/StdioDirectory.h>
-#endif
-
-#ifdef ANDROMEDA_VITA
-#include <Andromeda/FileSystem/Sceio/SceioFile.h>
-#include <Andromeda/FileSystem/Sceio/SceioDirectory.h>
-#endif
 
 namespace Andromeda
 {
@@ -72,24 +60,10 @@ namespace Andromeda
 			std::string loadName = _mainDirPath + fileName;
 			BaseDirectory* directory;
 
-			#ifdef ANDROMEDA_PC
 			{
 				directory = new StdioDirectory(loadName);
 			}
-			#endif
-			
-			#ifdef ANDROMEDA_SWITCH
-			{
-				directory = new StdioDirectory(loadName);
-			}
-			#endif
 
-			#ifdef ANDROMEDA_VITA
-			{
-				directory = new SceioDirectory(loadName);
-			}
-			#endif
-			
 			return directory;
 		}
 
@@ -126,25 +100,10 @@ namespace Andromeda
 
 			BaseFile* newFile;
 
-			#ifdef ANDROMEDA_PC
 			{
 				newFile = new StdioFile(fileName, loadName);
 			}
-			#endif
-			
-			#ifdef ANDROMEDA_SWITCH
-			{
-				newFile = new StdioFile(fileName, loadName);
-			}
-			#endif
 
-			#ifdef ANDROMEDA_VITA
-			{
-				newFile = new SceioFile(fileName, loadName);
-			}
-			#endif
-			
-			 
 			return newFile;
 		}
 	}

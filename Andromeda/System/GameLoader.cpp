@@ -1,16 +1,6 @@
 #include <Andromeda/System/GameLoader.h>
 
-#ifdef ANDROMEDA_GLFW
-#include <Andromeda/System/GLFW/GlfwGameLoader.h>
-#endif
-
-#ifdef ANDROMEDA_VITA
-#include <Andromeda/System/GXM/GameLoaderGxm.h>
-#endif
-
-#ifdef ANDROMEDA_SWITCH
 #include <Andromeda/System/SWITCH/GameLoaderSwitch.h>
-#endif
 
 namespace Andromeda
 {
@@ -25,23 +15,9 @@ namespace Andromeda
 		{
 			GameLoader* _loader = 0;
 
-			#ifdef ANDROMEDA_GLFW
-			{
-				_loader = new GlfwGameLoader(gameManager);
-			}
-			#endif
-
-			#ifdef ANDROMEDA_VITA
-			{
-				_loader = new GameLoaderGxm(gameManager);
-			}
-			#endif
-
-            #ifdef ANDROMEDA_SWITCH
             {
                 _loader = new GameLoaderSwitch(gameManager);
             }
-            #endif
 			
 			return _loader;
 		}

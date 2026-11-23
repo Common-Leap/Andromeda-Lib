@@ -2,22 +2,7 @@
 
 #include <Andromeda/Input/InputManager.h>
 
-#ifdef ANDROMEDA_GLFW
-#include <Andromeda/Input/GLFW/InputManagerGlfw.h>
-#endif
-
-#ifdef ANDROMEDA_VITA
-#include <Andromeda/Input/Vita/InputManagerVita.h>
-#endif
-
-#ifdef ANDROMEDA_RPI
-#include <Andromeda/Input/RPI/InputManagerRpi.h>
-#endif
-
-#ifdef ANDROMEDA_SWITCH
 #include <Andromeda/Input/SWITCH/InputManagerSwitch.h>
-#endif
-
 
 namespace Andromeda
 {
@@ -34,29 +19,10 @@ namespace Andromeda
 		{
 			if(_inputManager == 0)
 			{
-				#ifdef ANDROMEDA_GLFW
-				{
-					_inputManager = new InputManagerGlfw();
-				}
-				#endif
 
-				#ifdef ANDROMEDA_VITA
-				{
-					_inputManager = new InputManagerVita();
-				}
-				#endif
-				
-				#ifdef ANDROMEDA_RPI
-				{
-					_inputManager = new InputManagerRpi();
-				}
-				#endif
-				
-				#ifdef ANDROMEDA_SWITCH
 				{
 					_inputManager = new InputManagerSwitch();
 				}
-				#endif
 			}
 
 			return _inputManager;

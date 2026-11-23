@@ -6,20 +6,15 @@
 
 #include <functional>
 
-
 #include "utf8-utils.h"
 #include "distance-field.h"
 
-
-#ifdef ANDROMEDA_SWITCH
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#endif
 #include "stb_image.h"
 #include "stb_image_write.h"
 
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "stb_truetype.h"
-
 
 #ifndef max
 #define max(a,b) ((a) > (b) ? (a) : (b))
@@ -28,7 +23,6 @@
 #ifndef min
 #define min(a,b) ((a) < (b) ? (a) : (b))
 #endif
-
 
 namespace Andromeda
 {
@@ -87,7 +81,6 @@ namespace Andromeda
             return good;
         }
 
-
 		TexturedFont::TexturedFont(TextureAtlas* atlas, float size, std::string filename)
 		{
 			_atlas = atlas;
@@ -135,7 +128,6 @@ namespace Andromeda
 			//load actual data from memory
 			LoadFromMemory(size, _buffer, dataSize);
 
-#ifdef ANDROMEDA_SWITCH
 			if (_font == 0)
 			{
 				std::string fullPath = FileSystem::FileManager::Instance()->GetMainDirPath() + filename;
@@ -150,7 +142,6 @@ namespace Andromeda
 					Utils::Logger::Instance()->Log("TexturedFont::TexturedFont: file fallback success %s\n", fullPath.c_str());
 				}
 			}
-#endif
 		}
 
         //loading distance filed font
@@ -342,7 +333,6 @@ namespace Andromeda
 
             std::vector< texture_glyph_t*> glyphs;
 
-
             //5. create distance fileds for all chars in cache string
             for (char& c : cache)
             {
@@ -396,7 +386,6 @@ namespace Andromeda
                 saveFile->Write(&glyph->advance_x, sizeof(float), 1);
                 saveFile->Write(&glyph->advance_y, sizeof(float), 1);
 
-                
             }
 
             saveFile->Close();
@@ -408,7 +397,6 @@ namespace Andromeda
             delete atlas;
 
             delete[] fileData;
-
 
             return true;
         }
@@ -551,8 +539,6 @@ namespace Andromeda
 			//generate buffer object
 			_vertexArray->Generate();
 		}
-
-
 
 		int TexturedFont::CacheGlyphs(std::string text)
 		{
@@ -787,7 +773,6 @@ namespace Andromeda
 							{
 								kerning = texture_glyph_get_kerning(glyph, text + c - 1);
 							}
-
 
                             int offset_x = 0;
 

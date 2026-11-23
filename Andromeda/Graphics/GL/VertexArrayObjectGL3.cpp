@@ -2,23 +2,11 @@
 #include <Andromeda/Graphics/RenderManager.h>
 #include <Andromeda/Graphics/VertexTypes.h>
 
-#ifdef ANDROMEDA_GL3
-
-#define GLEW_STATIC
-#include <GL/glew.h>
-
-#endif
-
-#ifdef ANDROMEDA_SWITCH
-
 #include <switch.h>
 
 #include <EGL/egl.h>    // EGL library
 #include <EGL/eglext.h> // EGL extensions
 #include <glad/glad.h>  // glad library (OpenGL loader)
-
-#endif
-
 
 namespace Andromeda
 {

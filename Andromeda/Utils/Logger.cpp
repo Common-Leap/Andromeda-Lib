@@ -6,14 +6,6 @@
 #include <string.h>
 #include <Andromeda/FileSystem/FileManager.h>
 
-#ifdef ANDROMEDA_VITA
-
-//#include "debugnet.h"
-//#define ip_server "192.168.0.12"
-//#define port_server 18194
-//int ret;
-#endif
-
 #if defined(ANDROMEDA_FILE_LOG) && (ANDROMEDA_FILE_LOG != 0)
 #define ANDROMEDA_LOG_FILE_OUTPUT 1
 #else
@@ -43,11 +35,6 @@ namespace Andromeda
 			_fileName = "Info" + logTime + ".txt";
 			_errorFileName = "Error" + logTime + ".txt";
 
-			#ifdef ANDROMEDA_VITA
-			{
-				//ret = debugNetInit(ip_server, port_server, DEBUG);
-			}
-			#endif
 		}
 
 		Logger* Logger::Instance()
@@ -73,12 +60,6 @@ namespace Andromeda
 			va_start(argList, message);
 			vsnprintf(cbuffer, 1024, message, argList);
 			va_end(argList);
-
-			#ifdef ANDROMEDA_VITA
-			{
-				//debugNetPrintf(DEBUG, cbuffer, ret);
-			}
-			#endif
 
 			FileSystem::BaseFile* file = FileSystem::FileManager::Instance()->GetFile(_fileName,true);
 
@@ -178,7 +159,6 @@ namespace Andromeda
 #endif
 		}
 
-
 		void Logger::NetLog(const char *message, ...)
 		{
 			va_list argList;
@@ -187,11 +167,6 @@ namespace Andromeda
 			vsnprintf(cbuffer, 1024, message, argList);
 			va_end(argList);
 
-			#ifdef ANDROMEDA_VITA
-			{
-				//debugNetPrintf(DEBUG, cbuffer, ret);
-			}
-			#endif
 		}
 
 		void Logger::SetActive(bool state)

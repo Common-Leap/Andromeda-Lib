@@ -8,28 +8,11 @@
 #include <Andromeda/System/MemoryManager.h>
 #include <Andromeda/Utils/Logger.h>
 
-
-#ifdef ANDROMEDA_GL3
-
-#define GLEW_STATIC
-#include <GL/glew.h>
-
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include <stb/stb_image_write.h>
-
-#endif
-
-#ifdef ANDROMEDA_SWITCH
-
 #include <switch.h>
 
 #include <EGL/egl.h>    // EGL library
 #include <EGL/eglext.h> // EGL extensions
 #include <glad/glad.h>  // glad library (OpenGL loader)
-
-#endif
-
-
 
 namespace Andromeda
 {
@@ -40,7 +23,6 @@ namespace Andromeda
 			
 		}
 
-#ifdef ANDROMEDA_SWITCH
         bool RenderManagerGL3::InitEgl(NWindow* win)
 		{
             Utils::Logger::Instance()->Log("Init egl\n");
@@ -141,27 +123,11 @@ namespace Andromeda
             }
 		}
 
-#endif
-
 		void RenderManagerGL3::Init()
 		{
-			#ifdef ANDROMEDA_GL3
-
-			glewExperimental = GL_TRUE;
-
-			//init glwe lib
-			glewInit();
-
-			#endif
-			
-			#ifdef ANDROMEDA_SWITCH
 
             // Load OpenGL routines using glad
             gladLoadGL();
-
-
-			#endif
-			
 
 			// Define the viewport dimensions
 			glViewport(0, 0, _width, _height);
@@ -185,11 +151,9 @@ namespace Andromeda
 
 		void RenderManagerGL3::Finish()
 		{
-#ifdef ANDROMEDA_SWITCH
 
             DeinitEgl();
 
-#endif
 		}
 
 		void RenderManagerGL3::ClearScreen()
@@ -220,11 +184,9 @@ namespace Andromeda
 
 		void RenderManagerGL3::SwapBuffers()
 		{
-            #ifdef ANDROMEDA_SWITCH
 
             eglSwapBuffers(s_display, s_surface);
 
-            #endif
 		}
 
 		void RenderManagerGL3::CreateTexture(Texture* image)
@@ -504,7 +466,6 @@ namespace Andromeda
 		{
 			FrameBufferObjectGL3* fbo = new FrameBufferObjectGL3(width, height);
 
-
 			return fbo;
 		}
 
@@ -550,7 +511,6 @@ namespace Andromeda
 			//glPixelStorei(GL_PACK_ALIGNMENT, 1);
 			//unsigned char *data = new unsigned char[3 * _width * _height];
 			//glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-
 
 			/*uint8_t *pixels = new uint8_t[_width * _height * 4];
 
