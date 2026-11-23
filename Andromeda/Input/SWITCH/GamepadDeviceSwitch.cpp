@@ -18,7 +18,7 @@ namespace Andromeda
 			_kUp = kUp;
 		}
 		
-		void GamepadDeviceSwitch::UpdateJoystick(JoystickPosition left,JoystickPosition right)
+		void GamepadDeviceSwitch::UpdateJoystick(HidAnalogStickState left,HidAnalogStickState right)
 		{
 			_leftJoy = left;
 			_rightJoy = right;
@@ -26,22 +26,22 @@ namespace Andromeda
 
 		float GamepadDeviceSwitch::LeftAnalogX()
 		{
-			return _leftJoy.dx / 32760.0f;
+			return _leftJoy.x / 32760.0f;
 		}
 		
 		float GamepadDeviceSwitch::LeftAnalogY()
 		{
-			return _leftJoy.dy / 32760.0f;
+			return _leftJoy.y / 32760.0f;
 		}
 
 		float GamepadDeviceSwitch::RightAnalogX()
 		{
-			return _rightJoy.dx / 32760.0f;
+			return _rightJoy.x / 32760.0f;
 		}
 		
 		float GamepadDeviceSwitch::RightAnalogY()
 		{
-			return _rightJoy.dy / 32760.0f;
+			return _rightJoy.y / 32760.0f;
 		}
 
 		bool GamepadDeviceSwitch::KeyDown(Gamepad::Button button)
@@ -50,40 +50,40 @@ namespace Andromeda
 			switch(button)
 			{
 			case Gamepad::Left: 
-				return (_kDown & KEY_DLEFT);
+				return (_kDown & HidNpadButton_Left);
 				break;
 			case Gamepad::Right: 
-				return (_kDown & KEY_DRIGHT);
+				return (_kDown & HidNpadButton_Right);
 				break;
 			case Gamepad::Up: 
-				return (_kDown & KEY_DUP);
+				return (_kDown & HidNpadButton_Up);
 				break;
 			case Gamepad::Down: 
-				return (_kDown & KEY_DDOWN);
+				return (_kDown & HidNpadButton_Down);
 				break;
 			case Gamepad::Triangle: 
-				return (_kDown & KEY_X);
+				return (_kDown & HidNpadButton_X);
 				break;
 			case Gamepad::Square: 
-				return (_kDown & KEY_Y);
+				return (_kDown & HidNpadButton_Y);
 				break;
 			case Gamepad::Circle: 
-				return (_kDown & KEY_A);
+				return (_kDown & HidNpadButton_A);
 				break;
 			case Gamepad::Cross: 
-				return (_kDown & KEY_B);
+				return (_kDown & HidNpadButton_B);
 				break;
 			case Gamepad::LTrigger:
-				return (_kDown & KEY_L);
+				return (_kDown & HidNpadButton_L);
 				break;
 			case Gamepad::RTrigger:
-				return (_kDown & KEY_R);
+				return (_kDown & HidNpadButton_R);
 				break;
 			case Gamepad::Select:
-				return (_kDown & KEY_MINUS);
+				return (_kDown & HidNpadButton_Minus);
 				break;
 			case Gamepad::Start:
-				return (_kDown & KEY_PLUS);
+				return (_kDown & HidNpadButton_Plus);
 				break;
 			}
 			
@@ -106,7 +106,7 @@ namespace Andromeda
 				return LeftAnalogY() < toleranceLevel * -1.0f;
 				break;
 			case Gamepad::LAnalogPushed:
-				return (_kDown & KEY_LSTICK);
+				return (_kDown & HidNpadButton_StickL);
 				break;
 			}
 
@@ -125,7 +125,7 @@ namespace Andromeda
 				return RightAnalogY() < toleranceLevel * -1.0f;
 				break;
 			case Gamepad::RAnalogPushed:
-				return (_kDown & KEY_RSTICK);
+				return (_kDown & HidNpadButton_StickR);
 				break;
 			}
 
@@ -138,40 +138,40 @@ namespace Andromeda
 			switch(button)
 			{
 			case Gamepad::Left: 
-				return !(_kUp & KEY_DLEFT);
+				return !(_kUp & HidNpadButton_Left);
 				break;
 			case Gamepad::Right: 
-				return !(_kUp & KEY_DRIGHT);
+				return !(_kUp & HidNpadButton_Right);
 				break;
 			case Gamepad::Up: 
-				return !(_kUp & KEY_DUP);
+				return !(_kUp & HidNpadButton_Up);
 				break;
 			case Gamepad::Down: 
-				return !(_kUp & KEY_DDOWN);
+				return !(_kUp & HidNpadButton_Down);
 				break;
 			case Gamepad::Triangle: 
-				return !(_kUp & KEY_X);
+				return !(_kUp & HidNpadButton_X);
 				break;
 			case Gamepad::Square: 
-				return !(_kUp & KEY_Y);
+				return !(_kUp & HidNpadButton_Y);
 				break;
 			case Gamepad::Circle: 
-				return !(_kUp & KEY_A);
+				return !(_kUp & HidNpadButton_A);
 				break;
 			case Gamepad::Cross: 
-				return !(_kUp & KEY_B);
+				return !(_kUp & HidNpadButton_B);
 				break;
 			case Gamepad::LTrigger:
-				return !(_kUp & KEY_L);
+				return !(_kUp & HidNpadButton_L);
 				break;
 			case Gamepad::RTrigger:
-				return !(_kUp & KEY_R);
+				return !(_kUp & HidNpadButton_R);
 				break;
 			case Gamepad::Select:
-				return !(_kUp & KEY_MINUS);
+				return !(_kUp & HidNpadButton_Minus);
 				break;
 			case Gamepad::Start:
-				return !(_kUp & KEY_PLUS);
+				return !(_kUp & HidNpadButton_Plus);
 				break;
 			}
 			
@@ -193,7 +193,7 @@ namespace Andromeda
 				return !(LeftAnalogY() < toleranceLevel * -1.0f);
 				break;
 			case Gamepad::LAnalogPushed:
-				return !(_kDown & KEY_LSTICK);
+				return !(_kDown & HidNpadButton_StickL);
 				break;
 			}
 
@@ -212,7 +212,7 @@ namespace Andromeda
 				return !(RightAnalogY() < toleranceLevel * -1.0f);
 				break;
 			case Gamepad::RAnalogPushed:
-				return !(_kDown & KEY_RSTICK);
+				return !(_kDown & HidNpadButton_StickR);
 				break;
 			}
 
@@ -221,4 +221,3 @@ namespace Andromeda
 
 	}
 }
-

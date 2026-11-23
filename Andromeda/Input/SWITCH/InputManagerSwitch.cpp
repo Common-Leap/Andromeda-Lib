@@ -10,6 +10,9 @@ namespace Andromeda
 	{
 		InputManagerSwitch::InputManagerSwitch()
 		{
+			padConfigureInput(1, HidNpadStyleSet_NpadStandard);
+			padInitializeDefault(&_pad);
+
 			_gamepad = new GamepadDeviceSwitch(); 
 		}
 		
@@ -36,18 +39,11 @@ namespace Andromeda
 
 		void InputManagerSwitch::Update()
 		{
-			//Scan all the inputs. This should be done once for each frame
-			hidScanInput();
-			
-			//update data for pad 1
-			u64 kHeld = hidKeysHeld(CONTROLLER_P1_AUTO);
-			
-			//joystick
-			JoystickPosition pos_left, pos_right;
+			padUpdate(&_pad);
+			u64 kHeld = padGetButtons(&_pad);
 
-			//Read the joysticks' position
-			hidJoystickRead(&pos_left, CONTROLLER_P1_AUTO, JOYSTICK_LEFT);
-			hidJoystickRead(&pos_right, CONTROLLER_P1_AUTO, JOYSTICK_RIGHT);
+			HidAnalogStickState pos_left = padGetStickPos(&_pad, 0);
+			HidAnalogStickState pos_right = padGetStickPos(&_pad, 1);
 			
 			//update Ggamepad device
 			_gamepad->UpdateKesy(kHeld,kHeld);

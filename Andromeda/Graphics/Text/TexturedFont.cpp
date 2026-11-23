@@ -2,6 +2,7 @@
 #include <Andromeda/Graphics/RenderManager.h>
 #include <Andromeda/Graphics/VertexTypes.h>
 #include <Andromeda/FileSystem/FileManager.h>
+#include <Andromeda/Utils/Logger.h>
 
 #include <functional>
 
@@ -92,6 +93,8 @@ namespace Andromeda
 			_atlas = atlas;
 			_shader = 0;
 			_vertexArray = 0;
+			_font = 0;
+			_buffer = 0;
 			_fontAlign = FontCenter;
 
 			_lastLenght = 0;
@@ -105,9 +108,17 @@ namespace Andromeda
 			FileSystem::BaseFile* file = FileSystem::FileManager::Instance()->GetFile(filename);
 
 			if (file == 0)
+			{
+				Utils::Logger::Instance()->Log("TexturedFont::TexturedFont: can't open font file object %s\n", filename.c_str());
 				return;
+			}
 
-			file->Open(FileSystem::Read, FileSystem::Binary);
+			if (!file->Open(FileSystem::Read, FileSystem::Binary))
+			{
+				Utils::Logger::Instance()->Log("TexturedFont::TexturedFont: open failed %s\n", filename.c_str());
+				delete file;
+				return;
+			}
 
 			int dataSize = 0;
 			_buffer = file->GetData(dataSize);
@@ -115,9 +126,31 @@ namespace Andromeda
 			file->Close();
 			delete file;
 
+			if (_buffer == 0 || dataSize <= 0)
+			{
+				Utils::Logger::Instance()->Log("TexturedFont::TexturedFont: font data missing %s\n", filename.c_str());
+				return;
+			}
 
 			//load actual data from memory
 			LoadFromMemory(size, _buffer, dataSize);
+
+#ifdef ANDROMEDA_SWITCH
+			if (_font == 0)
+			{
+				std::string fullPath = FileSystem::FileManager::Instance()->GetMainDirPath() + filename;
+				Utils::Logger::Instance()->Log("TexturedFont::TexturedFont: fallback to file load %s\n", fullPath.c_str());
+				_font = texture_font_new_from_file(_atlas->GetAtlas(), size, fullPath.c_str());
+				if (_font == 0)
+				{
+					Utils::Logger::Instance()->Log("TexturedFont::TexturedFont: file fallback failed %s\n", fullPath.c_str());
+				}
+				else
+				{
+					Utils::Logger::Instance()->Log("TexturedFont::TexturedFont: file fallback success %s\n", fullPath.c_str());
+				}
+			}
+#endif
 		}
 
         //loading distance filed font
@@ -126,6 +159,8 @@ namespace Andromeda
             _atlas = nullptr;
             _shader = 0;
             _vertexArray = 0;
+            _font = 0;
+            _buffer = 0;
             _fontAlign = FontCenter;
 
             _lastLenght = 0;
@@ -142,7 +177,10 @@ namespace Andromeda
 		TexturedFont::~TexturedFont()
 		{
 			//delete font structure
-			texture_font_delete(_font);
+			if (_font != 0)
+			{
+				texture_font_delete(_font);
+			}
 
 			//delete font buffer
 			delete[] _buffer;
@@ -153,7 +191,23 @@ namespace Andromeda
 
 		void TexturedFont::LoadFromMemory(float size, void* memory_font, size_t memory_size)
 		{
+			if (_atlas == 0 || _atlas->GetAtlas() == 0)
+			{
+				Utils::Logger::Instance()->Log("TexturedFont::LoadFromMemory: atlas missing\n");
+				return;
+			}
+
+			if (memory_font == 0 || memory_size == 0)
+			{
+				Utils::Logger::Instance()->Log("TexturedFont::LoadFromMemory: font memory missing\n");
+				return;
+			}
+
 			_font = texture_font_new_from_memory(_atlas->GetAtlas(), size, memory_font, memory_size);
+			if (_font == 0)
+			{
+				Utils::Logger::Instance()->Log("TexturedFont::LoadFromMemory: texture_font_new_from_memory failed\n");
+			}
 
             //test
             //unsigned char* temp_bitmap = new unsigned char[1024 * 1024];
@@ -502,6 +556,12 @@ namespace Andromeda
 
 		int TexturedFont::CacheGlyphs(std::string text)
 		{
+			if (_font == 0)
+			{
+				Utils::Logger::Instance()->Log("TexturedFont::CacheGlyphs: font not initialized\n");
+				return -1;
+			}
+
 			return texture_font_load_glyphs(_font, text.c_str());
 		}
 
@@ -565,6 +625,11 @@ namespace Andromeda
 
 		float TexturedFont::GetTextLenght(std::string text)
 		{
+			if (_font == 0)
+			{
+				return 0.0f;
+			}
+
 			float lenght = 0;
 
 			const char * chartext = text.c_str();
@@ -591,6 +656,13 @@ namespace Andromeda
 
 		void TexturedFont::PrepareBuffer()
 		{
+			if (_font == 0)
+			{
+				_draw = false;
+				_textParts.clear();
+				return;
+			}
+
 			//get text lenght
 			int textLenght = 0;
 			int textHash = 0;

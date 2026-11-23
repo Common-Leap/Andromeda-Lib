@@ -20,6 +20,7 @@ namespace Andromeda
             AudioManager();
 
 			static AudioManager* Instance();
+			static void Shutdown();
 
 		public:
 

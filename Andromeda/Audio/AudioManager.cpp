@@ -56,5 +56,14 @@ namespace Andromeda
 
 			return _audioManager;
 		}
+
+		void AudioManager::Shutdown()
+		{
+			if (_audioManager != 0)
+			{
+				delete _audioManager;
+				_audioManager = 0;
+			}
+		}
 	}
 }

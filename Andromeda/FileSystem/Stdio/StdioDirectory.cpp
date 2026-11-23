@@ -27,6 +27,7 @@ namespace Andromeda
 			{
 				closedir(_directory);
 			}
+			_directory = nullptr;
 		}
 
 		std::vector<std::string> StdioDirectory::GetFiles()
@@ -56,7 +57,7 @@ namespace Andromeda
 		{
 			std::vector<std::string> allFiles = GetFiles();
 			std::vector<std::string> files;
-			
+
 			for (size_t i = 0; i < allFiles.size(); i++)
 			{
 				if (allFiles[i].find(extension) != std::string::npos)

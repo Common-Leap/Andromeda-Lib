@@ -13,6 +13,7 @@ namespace Andromeda
 			private:
 			
 				GamepadDeviceSwitch* _gamepad;
+				PadState _pad;
 			
 			public:
 			

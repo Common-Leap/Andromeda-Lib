@@ -21,6 +21,8 @@ namespace Andromeda
 
 		bool StdioFile::Open(FileMode fileMode, FileType fileType)
 		{
+			Close();
+
 			if(fileMode == FileSystem::Read)
 			{
 				if(fileType == FileSystem::Binary)
@@ -29,7 +31,7 @@ namespace Andromeda
 				}else
 				{
 					_filBuf = fopen(_loadFileName.c_str(), "r");
-				}				
+				}
 			}
 			else if (fileMode == FileSystem::Write)
 			{
@@ -40,7 +42,7 @@ namespace Andromeda
 				else
 				{
 					_filBuf = fopen(_loadFileName.c_str(), "w");
-				}				
+				}
 			}
 			else
 			{
@@ -65,7 +67,10 @@ namespace Andromeda
 		void StdioFile::Close()
 		{
 			if (_filBuf != 0)
+			{
 				fclose(_filBuf);
+				_filBuf = 0;
+			}
 		}
 
 		bool StdioFile::Exist()
@@ -78,21 +83,34 @@ namespace Andromeda
 
 		void StdioFile::Read(void *data, unsigned int size, int count)
 		{
-			fread(data, size, count, _filBuf);
+			if (_filBuf != 0)
+			{
+				fread(data, size, count, _filBuf);
+			}
 		}
 
 		void StdioFile::Write(void *data, unsigned int size, int count)
 		{
-			fwrite(data, size, count, _filBuf);
+			if (_filBuf != 0)
+			{
+				fwrite(data, size, count, _filBuf);
+			}
 		}
 
 		unsigned char* StdioFile::GetData(int &dataSize)
 		{
+			dataSize = 0;
+
 			if (_filBuf != 0)
 			{
 				fseek(_filBuf, 0, SEEK_END);
 				dataSize = ftell(_filBuf);
 				fseek(_filBuf, 0, SEEK_SET);
+
+				if (dataSize <= 0)
+				{
+					return 0;
+				}
 
 				unsigned char* buffer = new unsigned char[dataSize];
 
@@ -106,11 +124,18 @@ namespace Andromeda
 
 		char* StdioFile::GetTextData(int &dataSize)
 		{
+			dataSize = 0;
+
 			if (_filBuf != 0)
 			{
 				fseek(_filBuf, 0, SEEK_END);
 				dataSize = ftell(_filBuf);
 				fseek(_filBuf, 0, SEEK_SET);
+
+				if (dataSize < 0)
+				{
+					return 0;
+				}
 
 				char *buffer = new char[dataSize + 1];
 				fread(buffer, dataSize, 1, _filBuf);

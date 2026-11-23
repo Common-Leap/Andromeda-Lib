@@ -71,15 +71,29 @@ texture_font_load_face(texture_font_t *self, float size,
     /* Select charmap */
     error = FT_Select_Charmap(*face, FT_ENCODING_UNICODE);
     if(error) {
-        fprintf(stderr, "FT_Error (line %d, code 0x%02x) : %s\n",
-                __LINE__, FT_Errors[error].code, FT_Errors[error].message);
-        FT_Done_Face(*face);
-        FT_Done_FreeType(*library);
-        return 0;
+        if ((*face)->num_charmaps > 0) {
+            error = FT_Set_Charmap(*face, (*face)->charmaps[0]);
+        }
+
+        if(error) {
+            fprintf(stderr, "FT_Error (line %d, code 0x%02x) : %s\n",
+                    __LINE__, FT_Errors[error].code, FT_Errors[error].message);
+            FT_Done_Face(*face);
+            FT_Done_FreeType(*library);
+            return 0;
+        }
     }
 
     /* Set char size */
     error = FT_Set_Char_Size(*face, (int)(size * HRES), 0, DPI * HRES, DPI);
+    if(error) {
+        float logical_size = size > 256.f ? (size / 100.f) : size;
+        if (logical_size < 1.f) {
+            logical_size = 1.f;
+        }
+
+        error = FT_Set_Pixel_Sizes(*face, 0, (FT_UInt)logical_size);
+    }
 
     if(error) {
         fprintf(stderr, "FT_Error (line %d, code 0x%02x) : %s\n",
@@ -231,7 +245,7 @@ texture_font_init(texture_font_t *self)
     self->lcd_weights[3] = 0x40;
     self->lcd_weights[4] = 0x10;
 
-    if (!texture_font_load_face(self, self->size * 100.f, &library, &face))
+    if (!texture_font_load_face(self, self->size, &library, &face))
         return -1;
 
     self->underline_position = face->underline_position / (float)(HRESf*HRESf) * self->size;
@@ -249,9 +263,9 @@ texture_font_init(texture_font_t *self)
     }
 
     metrics = face->size->metrics;
-    self->ascender = (metrics.ascender >> 6) / 100.0;
-    self->descender = (metrics.descender >> 6) / 100.0;
-    self->height = (metrics.height >> 6) / 100.0;
+    self->ascender = (metrics.ascender >> 6);
+    self->descender = (metrics.descender >> 6);
+    self->height = (metrics.height >> 6);
     self->linegap = self->height - self->ascender + self->descender;
     FT_Done_Face( face );
     FT_Done_FreeType( library );

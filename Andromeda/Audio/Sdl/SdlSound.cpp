@@ -86,8 +86,13 @@ namespace Andromeda
 		{
 			_audioType = 1;
 
-			//set proper location
-			std::string loadName = FileSystem::FileManager::Instance()->GetMainDirPath() + filePath;
+			// If the path is already absolute (mod songs use full sdmc:/ paths),
+			// don't prepend the main dir.
+			std::string loadName;
+			if (filePath.size() > 1 && (filePath[0] == '/' || filePath.find(':') != std::string::npos))
+				loadName = filePath;
+			else
+				loadName = FileSystem::FileManager::Instance()->GetMainDirPath() + filePath;
 
 			_audio = Mix_LoadMUS(loadName.c_str());
 

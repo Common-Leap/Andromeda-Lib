@@ -64,7 +64,7 @@ namespace Andromeda
 
 		KeyboardDevice* InputManager::GetKeyboardDevice(int deviceNumber)
 		{
-			std::string deviceName = "keyboard" + deviceNumber;
+			std::string deviceName = "keyboard" + std::to_string(deviceNumber);
 
 			if (_devices.find(deviceName) == _devices.end())
 			{
@@ -82,7 +82,7 @@ namespace Andromeda
 
 		MouseDevice* InputManager::GetMouseDevice(int deviceNumber)
 		{
-			std::string deviceName = "mouse" + deviceNumber;
+			std::string deviceName = "mouse" + std::to_string(deviceNumber);
 
 			if (_devices.find(deviceName) == _devices.end())
 			{
@@ -100,7 +100,7 @@ namespace Andromeda
 
 		GamepadDevice* InputManager::GetGamepadDevice(int deviceNumber)
 		{
-			std::string deviceName = "gamepad" + deviceNumber;
+			std::string deviceName = "gamepad" + std::to_string(deviceNumber);
 
 			if (_devices.find(deviceName) == _devices.end())
 			{
@@ -118,7 +118,7 @@ namespace Andromeda
 
 		TouchDevice* InputManager::GetTouchDevice(int deviceNumber)
 		{
-			std::string deviceName = "touch" + deviceNumber;
+			std::string deviceName = "touch" + std::to_string(deviceNumber);
 
 			if (_devices.find(deviceName) == _devices.end())
 			{

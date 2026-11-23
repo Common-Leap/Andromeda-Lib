@@ -14,6 +14,12 @@
 //int ret;
 #endif
 
+#if defined(ANDROMEDA_FILE_LOG) && (ANDROMEDA_FILE_LOG != 0)
+#define ANDROMEDA_LOG_FILE_OUTPUT 1
+#else
+#define ANDROMEDA_LOG_FILE_OUTPUT 0
+#endif
+
 namespace Andromeda
 {
 	namespace Utils
@@ -56,99 +62,120 @@ namespace Andromeda
 
 		void Logger::Log(const char* message, ...)
 		{
-			if (_active)
+			if (!_active)
 			{
-				va_list argList;
-				char cbuffer[1024];
-				va_start(argList, message);
-				vsnprintf(cbuffer, 1024, message, argList);
-				va_end(argList);
-
-				#ifdef ANDROMEDA_VITA
-				{
-					//debugNetPrintf(DEBUG, cbuffer, ret);
-				}
-				#endif
-
-				FileSystem::BaseFile* file = FileSystem::FileManager::Instance()->GetFile(_fileName,true);
-
-				if (file == 0)
-					return;
-
-				file->Open(FileSystem::Append, FileSystem::Text);
-				file->Write(cbuffer, sizeof(char), strlen(cbuffer));
-				file->Close();
-
-				delete file;
+				return;
 			}
+
+#if ANDROMEDA_LOG_FILE_OUTPUT
+			va_list argList;
+			char cbuffer[1024];
+			va_start(argList, message);
+			vsnprintf(cbuffer, 1024, message, argList);
+			va_end(argList);
+
+			#ifdef ANDROMEDA_VITA
+			{
+				//debugNetPrintf(DEBUG, cbuffer, ret);
+			}
+			#endif
+
+			FileSystem::BaseFile* file = FileSystem::FileManager::Instance()->GetFile(_fileName,true);
+
+			if (file == 0)
+				return;
+
+			if (!file->Open(FileSystem::Append, FileSystem::Text))
+			{
+				delete file;
+				return;
+			}
+
+			file->Write(cbuffer, sizeof(char), strlen(cbuffer));
+			delete file;
+#endif
 		}
 
 		void Logger::Info(const char* file, const char* function, int line, const char *message, ...)
 		{
-			if (_active)
+			if (!_active)
 			{
-				va_list argList;
-				char cbuffer[1024];
-				va_start(argList, message);
-				vsnprintf(cbuffer, 1024, message, argList);
-				va_end(argList);
-
-				std::string logMessage = "";
-
-				if (_debug)
-				{
-					logMessage = GetTime() + " " + std::string(file) + "(" + to_string(line) + ") " + std::string(function) + " : " + std::string(cbuffer);
-				}
-				else
-				{
-					logMessage = std::string(cbuffer);
-				}
-
-				FileSystem::BaseFile* file = FileSystem::FileManager::Instance()->GetFile(_fileName, true);
-
-				if (file == 0)
-					return;
-
-				file->Open(FileSystem::Append, FileSystem::Text);
-				file->Write((void*)logMessage.c_str(), sizeof(char), logMessage.length());
-				file->Close();
-
-				delete file;
+				return;
 			}
+
+#if ANDROMEDA_LOG_FILE_OUTPUT
+			va_list argList;
+			char cbuffer[1024];
+			va_start(argList, message);
+			vsnprintf(cbuffer, 1024, message, argList);
+			va_end(argList);
+
+			std::string logMessage = "";
+
+			if (_debug)
+			{
+				logMessage = GetTime() + " " + std::string(file) + "(" + to_string(line) + ") " + std::string(function) + " : " + std::string(cbuffer);
+			}
+			else
+			{
+				logMessage = std::string(cbuffer);
+			}
+
+			FileSystem::BaseFile* outFile = FileSystem::FileManager::Instance()->GetFile(_fileName, true);
+
+			if (outFile == 0)
+				return;
+
+			if (!outFile->Open(FileSystem::Append, FileSystem::Text))
+			{
+				delete outFile;
+				return;
+			}
+
+			outFile->Write((void*)logMessage.c_str(), sizeof(char), logMessage.length());
+			delete outFile;
+#endif
 		}
 
 		void Logger::Error(const char* file, const char* function,int line, const char *message, ...)
 		{
-			if (_active)
+			if (!_active)
 			{
-				va_list argList;
-				char cbuffer[1024];
-				va_start(argList, message);
-				vsnprintf(cbuffer, 1024, message, argList);
-				va_end(argList);
-
-				std::string logMessage = "";
-
-				if (_debug)
-				{
-					logMessage = GetTime() + " " + std::string(file) + "(" + to_string(line) + ") " + std::string(function) + " : " + std::string(cbuffer);
-				}
-				else
-				{
-					logMessage = std::string(cbuffer);
-				}
-
-				FileSystem::BaseFile* file = FileSystem::FileManager::Instance()->GetFile(_errorFileName, true);
-
-				if (file == 0)
-					return;
-
-				file->Open(FileSystem::Append, FileSystem::Text);
-				file->Write((void*)logMessage.c_str(), sizeof(char), logMessage.length());
-				file->Close();
-
-				delete file;
+				return;
 			}
+
+#if ANDROMEDA_LOG_FILE_OUTPUT
+			va_list argList;
+			char cbuffer[1024];
+			va_start(argList, message);
+			vsnprintf(cbuffer, 1024, message, argList);
+			va_end(argList);
+
+			std::string logMessage = "";
+
+			if (_debug)
+			{
+				logMessage = GetTime() + " " + std::string(file) + "(" + to_string(line) + ") " + std::string(function) + " : " + std::string(cbuffer);
+			}
+			else
+			{
+				logMessage = std::string(cbuffer);
+			}
+
+			FileSystem::BaseFile* outFile = FileSystem::FileManager::Instance()->GetFile(_errorFileName, true);
+
+			if (outFile == 0)
+				return;
+
+			if (!outFile->Open(FileSystem::Append, FileSystem::Text))
+			{
+				delete outFile;
+				return;
+			}
+
+			outFile->Write((void*)logMessage.c_str(), sizeof(char), logMessage.length());
+			delete outFile;
+#endif
 		}
 
 

@@ -13,29 +13,45 @@ namespace Andromeda
 
 		int TouchDeviceSwitch::GetTouchCount()
 		{
-			return hidTouchCount();
+			HidTouchScreenState touchState;
+			if (hidGetTouchScreenStates(&touchState, 1) == 0)
+			{
+				return 0;
+			}
+
+			return touchState.count;
 		}
 
 		int TouchDeviceSwitch::GetTouchX(int touchNumber)
 		{
-			touchPosition touch;
-			
-			//Read the touch screen coordinates
-            hidTouchRead(&touch, touchNumber);
-			
-			
-			return touch.px;
+			HidTouchScreenState touchState;
+			if (hidGetTouchScreenStates(&touchState, 1) == 0)
+			{
+				return 0;
+			}
+
+			if (touchNumber < 0 || touchNumber >= touchState.count)
+			{
+				return 0;
+			}
+
+			return touchState.touches[touchNumber].x;
 		}
 
 		int TouchDeviceSwitch::GetTouchY(int touchNumber)
 		{
-			touchPosition touch;
-			
-			//Read the touch screen coordinates
-            hidTouchRead(&touch, touchNumber);
-			
-			
-			return touch.py;
+			HidTouchScreenState touchState;
+			if (hidGetTouchScreenStates(&touchState, 1) == 0)
+			{
+				return 0;
+			}
+
+			if (touchNumber < 0 || touchNumber >= touchState.count)
+			{
+				return 0;
+			}
+
+			return touchState.touches[touchNumber].y;
 		}
 
 	}
