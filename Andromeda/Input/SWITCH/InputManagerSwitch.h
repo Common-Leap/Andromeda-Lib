@@ -3,6 +3,7 @@
 
 #include <Andromeda/Input/InputManager.h>
 #include <Andromeda/Input/SWITCH/GamepadDeviceSwitch.h>
+#include <Andromeda/Input/SWITCH/TouchDeviceSwitch.h>
 
 namespace Andromeda
 {
@@ -13,6 +14,7 @@ namespace Andromeda
 			private:
 			
 				GamepadDeviceSwitch* _gamepad;
+				TouchDeviceSwitch* _touch;
 				PadState _pad;
 			
 			public:

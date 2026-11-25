@@ -212,7 +212,8 @@ namespace Andromeda
 			{
 				Utils::Logger::Instance()->Log("Can't find uniform : %s\n", name.c_str());
 			}
-			glProgramUniform3fv(_shaderProgram, uniformLocation, 1, glm::value_ptr(val));
+			Bind();
+			glUniform3fv(uniformLocation, 1, glm::value_ptr(val));
 		}
 
 		void ShaderGlSl::SetUniform(ShaderType shaderType, std::string name, glm::vec4& val)
@@ -222,7 +223,8 @@ namespace Andromeda
 			{
 				Utils::Logger::Instance()->Log("Can't find uniform : %s\n", name.c_str());
 			}
-			glProgramUniform4fv(_shaderProgram, uniformLocation, 1, glm::value_ptr(val));
+			Bind();
+			glUniform4fv(uniformLocation, 1, glm::value_ptr(val));
 		}
 
 		void ShaderGlSl::SetUniform(ShaderType shaderType, std::string name, glm::mat3& val)

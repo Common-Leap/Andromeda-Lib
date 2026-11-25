@@ -74,15 +74,20 @@ namespace Andromeda
                 goto _fail1;
             }
 
-            // Create an EGL rendering context
-            static const EGLint contextAttributeList[] =
+            // Create an EGL rendering context, 3.3 is the oldest version the shaders can use
+            static const EGLint contextVersions[][2] = { { 4, 3 }, { 3, 3 } };
+            s_context = nullptr;
+            for (int i = 0; i < 2 && !s_context; i++)
             {
-                EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
-                EGL_CONTEXT_MAJOR_VERSION_KHR, 4,
-                EGL_CONTEXT_MINOR_VERSION_KHR, 3,
-                EGL_NONE
-            };
-            s_context = eglCreateContext(s_display, config, EGL_NO_CONTEXT, contextAttributeList);
+                const EGLint contextAttributeList[] =
+                {
+                    EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
+                    EGL_CONTEXT_MAJOR_VERSION_KHR, contextVersions[i][0],
+                    EGL_CONTEXT_MINOR_VERSION_KHR, contextVersions[i][1],
+                    EGL_NONE
+                };
+                s_context = eglCreateContext(s_display, config, EGL_NO_CONTEXT, contextAttributeList);
+            }
             if (!s_context)
             {
                 Utils::Logger::Instance()->Log("Context creation failed! error: %d", eglGetError());
@@ -128,6 +133,7 @@ namespace Andromeda
 
             // Load OpenGL routines using glad
             gladLoadGL();
+            Utils::Logger::Instance()->Log("OpenGL: %s, %s\n", (const char*)glGetString(GL_VERSION), (const char*)glGetString(GL_RENDERER));
 
 			// Define the viewport dimensions
 			glViewport(0, 0, _width, _height);

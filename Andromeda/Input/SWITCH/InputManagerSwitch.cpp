@@ -13,7 +13,10 @@ namespace Andromeda
 			padConfigureInput(1, HidNpadStyleSet_NpadStandard);
 			padInitializeDefault(&_pad);
 
-			_gamepad = new GamepadDeviceSwitch(); 
+			hidInitializeTouchScreen();
+
+			_gamepad = new GamepadDeviceSwitch();
+			_touch = new TouchDeviceSwitch();
 		}
 		
 		
@@ -46,8 +49,11 @@ namespace Andromeda
 			HidAnalogStickState pos_right = padGetStickPos(&_pad, 1);
 			
 			//update Ggamepad device
-			_gamepad->UpdateKesy(kHeld,kHeld);
+			_gamepad->UpdateButtons(kHeld);
 			_gamepad->UpdateJoystick(pos_left,pos_right);
+
+			//update touch device
+			_touch->Update();
 		}
 
 		KeyboardDevice* InputManagerSwitch::GetKeyboard(int deviceNumber)
@@ -67,7 +73,7 @@ namespace Andromeda
 
 		TouchDevice* InputManagerSwitch::GetTouch(int deviceNumber)
 		{
-			return new TouchDeviceSwitch();
+			return _touch;
 		}
 	}
 }

@@ -19,11 +19,13 @@ namespace Andromeda
 			
 			private:
 			
-			u64 _kDown;
-			u64 _kUp;
+			u64 _buttons;
+			bool _stickPushed[Gamepad::Count];
 			
 			HidAnalogStickState _leftJoy;
 			HidAnalogStickState _rightJoy;
+
+			void UpdateStick(Gamepad::Button button, float value);
 
 		public:
 
@@ -36,7 +38,7 @@ namespace Andromeda
 			bool KeyDown(Gamepad::Button button);
 			bool KeyUp(Gamepad::Button button);
 			
-			void UpdateKesy(u64 kDown,u64 kUp);
+			void UpdateButtons(u64 buttons);
 			void UpdateJoystick(HidAnalogStickState left,HidAnalogStickState right);
 
 			friend class InputManagerSwitch;

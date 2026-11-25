@@ -75,8 +75,6 @@ namespace Andromeda
 			//create vertex array object
 			void CreateVertexObject();
 
-			float GetTextLenght(std::string text);
-
 			void PrepareBuffer();
 
             unsigned char ComputeY(int r, int g, int b);
@@ -93,6 +91,9 @@ namespace Andromeda
             static texture_glyph_t* CreateDistanceGlymph(FT_Library& library, TextureAtlas* atlas, const char* filename, const char* codepoint, const float   highres_size, const float   lowres_size, const float   padding);
 
 			int CacheGlyphs(std::string cache);
+
+			//width of a text in pixels
+			float GetTextLenght(std::string text);
 
 			void SetShader(Shader* shader);
 

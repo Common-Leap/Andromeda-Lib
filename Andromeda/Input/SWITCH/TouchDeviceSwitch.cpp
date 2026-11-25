@@ -1,6 +1,6 @@
 #include <Andromeda/Input/SWITCH/TouchDeviceSwitch.h>
 
-#include <switch.h>
+#include <string.h>
 
 namespace Andromeda
 {
@@ -8,51 +8,40 @@ namespace Andromeda
 	{
 		TouchDeviceSwitch::TouchDeviceSwitch()
 		{
-			_touchCount = 0;
+			memset(&_state, 0, sizeof(_state));
+		}
+
+		void TouchDeviceSwitch::Update()
+		{
+			if (hidGetTouchScreenStates(&_state, 1) == 0)
+			{
+				_state.count = 0;
+			}
 		}
 
 		int TouchDeviceSwitch::GetTouchCount()
 		{
-			HidTouchScreenState touchState;
-			if (hidGetTouchScreenStates(&touchState, 1) == 0)
-			{
-				return 0;
-			}
-
-			return touchState.count;
+			return _state.count;
 		}
 
 		int TouchDeviceSwitch::GetTouchX(int touchNumber)
 		{
-			HidTouchScreenState touchState;
-			if (hidGetTouchScreenStates(&touchState, 1) == 0)
+			if (touchNumber < 0 || touchNumber >= (int)_state.count)
 			{
 				return 0;
 			}
 
-			if (touchNumber < 0 || touchNumber >= touchState.count)
-			{
-				return 0;
-			}
-
-			return touchState.touches[touchNumber].x;
+			return _state.touches[touchNumber].x;
 		}
 
 		int TouchDeviceSwitch::GetTouchY(int touchNumber)
 		{
-			HidTouchScreenState touchState;
-			if (hidGetTouchScreenStates(&touchState, 1) == 0)
+			if (touchNumber < 0 || touchNumber >= (int)_state.count)
 			{
 				return 0;
 			}
 
-			if (touchNumber < 0 || touchNumber >= touchState.count)
-			{
-				return 0;
-			}
-
-			return touchState.touches[touchNumber].y;
+			return _state.touches[touchNumber].y;
 		}
-
 	}
 }

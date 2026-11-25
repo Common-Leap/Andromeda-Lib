@@ -153,6 +153,10 @@ namespace Gamepad
 		RAnalogDown,
 		RAnalogPushed,
 
+		//second pair of triggers, last so saved button numbers stay valid
+		ZLTrigger,
+		ZRTrigger,
+
 		Count // Keep last -- total number
 	};
 }

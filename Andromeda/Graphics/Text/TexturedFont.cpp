@@ -662,8 +662,9 @@ namespace Andromeda
 			{
 				textLenght += _textParts[i].Text.length();
 				wholeText += _textParts[i].Text;
-				colorHash += _textParts[i].Color.x + _textParts[i].Color.y + _textParts[i].Color.z;
-				positionHash += _textParts[i].Position.x + _textParts[i].Position.y;
+				//weighted, so that parts swapping colors or places still change the hash
+				colorHash += (_textParts[i].Color.x + _textParts[i].Color.y * 3.0f + _textParts[i].Color.z * 7.0f) * (i + 1);
+				positionHash += (_textParts[i].Position.x + _textParts[i].Position.y * 3.0f) * (i + 1);
 			}
 
 			if (textLenght == 0)

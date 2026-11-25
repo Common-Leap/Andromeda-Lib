@@ -3,6 +3,8 @@
 
 #include <Andromeda/Input/TouchDevice.h>
 
+#include <switch.h>
+
 namespace Andromeda
 {
 	namespace Input
@@ -13,9 +15,11 @@ namespace Andromeda
 		{
 			TouchDeviceSwitch();
 			
-			int _touchCount;
+			HidTouchScreenState _state;
 
 		public:
+
+			void Update();
 
 			int GetTouchCount();
 
